@@ -21,5 +21,18 @@ public class PartController {
         return "main";
     }
 
+    @PostMapping
+    public String find(@RequestParam String type, Map<String, Object> model){
+        Iterable<Part> parts;
+        if((type == null) || (type.isEmpty()))
+            parts = repo.findAll();
+
+        else
+            parts = repo.findByTypeIgnoreCaseLike("%"+type+"%");
+        model.put("parts", parts);
+
+        return "main";
+    }
+
 
 }

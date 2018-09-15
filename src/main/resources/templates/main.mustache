@@ -78,12 +78,12 @@
 <div>
     <form method="post" action="find">
 
-        <input class="text-input1" required = true type="text" name="find" placeholder="Поиск детали по наименованию">
+        <input class="text-input1" type="text" name="type" placeholder="Поиск детали по наименованию">
         <button type="submit">Найти</button>
     </form>
 
 </div>
-
+<!-- фильтрация по необходимости деталей-->
 <div class="cont3">
     <form method="post" action="filter">
         <p><b>Отобразить на странице:</b></p>
@@ -109,7 +109,8 @@
         <tr>
             <td >{{id}}</td>
             <td>{{type}}</td>
-            <td>{{isNecessary}}</td>
+            <!-- transform boolean to String-param in mustache-->
+            <td>{{#isNecessary}}да{{/isNecessary}}{{^isNecessary}}нет{{/isNecessary}}</td>
             <td>{{quantity}}</td>
             <td><form method="post" action="edit"><button type="submit" value="{{id}}">Изменить</button></form></td>
             <td><form method="post" action="delete"><button type="submit" value="{{id}}">Удалить</button></form></td>
