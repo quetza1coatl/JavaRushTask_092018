@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parts</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        .tg {
+            /* Устанавливает, как отображать границы вокруг ячеек таблицы.
+             collapse -  Линия между ячейками отображается только одна. Т.е. соседние не сливаются в одну жирную */
+            border-collapse: collapse;
+            /* Цвет границы */
+            border-color: #ccc;
+
+        }
+        tr:nth-child(Odd) {
+            background: #e6f3e3; /* Цвет фона */
+        }
+
+        .tg td {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            /* Устанавливает значение полей вокруг содержимого элемента. см. подробности использования, хитро в
+            зависимости от количества переданных параметров*/
+            padding: 10px 5px;
+            /* Устанавливает стиль границы вокруг элемента.
+            [none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset]*/
+            border-style: solid;
+            /*Задает толщину границы. thin (2 пиксела), medium (4 пиксела) и thick (6 пикселов) или значение в px*/
+            border-width: 1px;
+            /*Свойство overflow управляет отображением содержания блочного элемента, если оно целиком не помещается
+             и выходит за область заданных размеров. auto | hidden | scroll | visible | inherit*/
+            overflow: hidden;
+            /*Свойство word-break указывает, как делать перенос строк внутри слов, которые не помещаются по ширине в заданную область
+            normal | break-all | keep-all*/
+            word-break: normal;
+            /*Определяет цвет текста элемента*/
+            color: #333;
+
+
+        }
+        .tg th {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            /* Устанавливает насыщенность шрифта bold|bolder|lighter|normal|100|200|300|400|500|600|700|800|900 */
+            font-weight: bold;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+
+            color: #333;
+            background-color: #c0d6e4;
+        }
+        .add{
+            padding: 5px;
+            margin: 5px 0px 5px 0px;
+        }
+        .text-input1{
+            width: 280px;
+        }
+        .cont3{
+            margin: 5px 0px 5px 0px;
+
+        }
+
+
+    </style>
+</head>
+
+<body>
+<!-- Добавляем деталь-->
+<form method="post" action="add">
+     <button class="add" type="submit">Добавить новую деталь</button>
+
+</form>
+<!-- поиск по наименованию-->
+<div>
+    <form method="post" action="find">
+
+        <input class="text-input1" required = true type="text" name="find" placeholder="Поиск детали по наименованию">
+        <button type="submit">Найти</button>
+    </form>
+
+</div>
+
+<div class="cont3">
+    <form method="post" action="filter">
+        <p><b>Отобразить на странице:</b></p>
+        <input type="radio" checked="true" name="f" value="all">Все детали
+        <input type="radio" name="f" value="ness">Только необходимые
+        <input type="radio" name="f" value="unnness">Только опциональные
+
+        <button type="submit">Отфильтровать</button>
+    </form>
+
+</div>
+
+<div>
+    <table class="tg" >
+        <tr>
+            <th width="30">ID</th>
+            <th width="250">Тип детали</th>
+            <th width="120">Необходимость</th>
+            <th width="50">Количество</th>
+            <th colspan="2">Операции</th>
+        </tr>
+        {{#parts}}
+        <tr>
+            <td >{{id}}</td>
+            <td>{{type}}</td>
+            <td>{{isNecessary}}</td>
+            <td>{{quantity}}</td>
+            <td><form method="post" action="edit"><button type="submit" value="{{id}}">Изменить</button></form></td>
+            <td><form method="post" action="delete"><button type="submit" value="{{id}}">Удалить</button></form></td>
+        </tr>
+        {{/parts}}
+    </table>
+</div>
+<div><b>Всего можно собрать:</b></div>
+</body>
+</html>
