@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.ServletRequest;
 import java.util.Map;
 
 @Controller
@@ -17,7 +19,6 @@ public class PartController {
         Iterable<Part> parts = repo.findAll();
         model.put("parts", parts);
 
-        //возвращает название html-шаблона
         return "main";
     }
 
@@ -30,6 +31,25 @@ public class PartController {
         else
             parts = repo.findByTypeIgnoreCaseLike("%"+type+"%");
         model.put("parts", parts);
+
+        return "main";
+    }
+
+    @PostMapping("filter")
+    public String filter(@RequestParam String filter, Map<String,Object> model){
+        Iterable<Part> parts;
+        switch (filter){
+            case "necessary":
+                parts = repo.findByIsNecessary(true);
+                break;
+            case "unnecessary":
+                parts = repo.findByIsNecessary(false);
+                break;
+             default:
+                 parts = repo.findAll();
+        }
+        model.put("parts", parts);
+
 
         return "main";
     }
