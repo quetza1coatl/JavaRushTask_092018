@@ -5,8 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.ServletRequest;
 import java.util.Map;
 
 @Controller
@@ -18,7 +16,7 @@ public class PartController {
     public String main(Map<String, Object> model) {
         Iterable<Part> parts = repo.findAll();
         model.put("parts", parts);
-
+        calculateQuantityOfDevices (model);
         return "main";
     }
 
@@ -31,8 +29,16 @@ public class PartController {
         else
             parts = repo.findByTypeIgnoreCaseLike("%"+type+"%");
         model.put("parts", parts);
+        calculateQuantityOfDevices (model);
 
         return "main";
+    }
+    @PostMapping("add")
+    public String add(@RequestParam String type, @RequestParam(required = false, defaultValue = "false") String checkbox, @RequestParam int quantity, Map<String, Object> model){
+        Part p = new Part(type, Boolean.valueOf(checkbox), quantity);
+        repo.save(p);
+        //перенаправляет на главную страницу, которая отображает весь список
+        return "redirect:/";
     }
 
     @PostMapping("filter")
@@ -49,9 +55,17 @@ public class PartController {
                  parts = repo.findAll();
         }
         model.put("parts", parts);
+        calculateQuantityOfDevices (model);
 
 
         return "main";
+    }
+
+    public void calculateQuantityOfDevices(Map<String,Object> model){
+        Integer quantity = repo.findMinQuantityInNecessaryDetails();
+
+        model.put("total", quantity);
+
     }
 
 

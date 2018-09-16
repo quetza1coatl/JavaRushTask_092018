@@ -6,13 +6,14 @@ import javax.persistence.*;
 @Table(name = "part")
 public class Part {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer id;
-    @Column(name = "type")
+
     private String type;
-    @Column(name = "is_necessary")
+
     private boolean isNecessary;
-    @Column(name = "quantity")
+
     private int quantity;
 
     public Part() {
@@ -57,6 +58,13 @@ public class Part {
         this.quantity = quantity;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Part{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", isNecessary=" + isNecessary +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

@@ -9,6 +9,7 @@ quantity INT(11),
 PRIMARY KEY (id))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+GRANT ALL ON test.* TO 'root'@'localhost';
 INSERT INTO part (id, `type`, is_necessary,quantity)
 	VALUES
 		(1,'Материнская плата',1,9),

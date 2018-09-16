@@ -71,7 +71,11 @@
 <body>
 <!-- Добавляем деталь-->
 <form method="post" action="add">
-     <button class="add" type="submit">Добавить новую деталь</button>
+
+        <input type="text" required="true" name="type" placeholder="Наименование"/>
+        <input type="checkbox" name="checkbox" value="true"> Обязательно при сборке
+        <input type="number" min="1" required="true" name="quantity" placeholder="Количество"/>
+        <button class="add" type="submit">Добавить новую деталь</button>
 
 </form>
 <!-- поиск по наименованию-->
@@ -118,6 +122,6 @@
         {{/parts}}
     </table>
 </div>
-<div><b>Всего можно собрать:</b></div>
+<div><b>Всего можно собрать: {{total}} единиц</b></div>
 </body>
 </html>
