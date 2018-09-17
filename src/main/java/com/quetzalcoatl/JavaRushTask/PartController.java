@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
 
+
 @Controller
 public class PartController {
     @Autowired
@@ -37,7 +38,6 @@ public class PartController {
     public String add(@RequestParam String type, @RequestParam(required = false, defaultValue = "false") String checkbox, @RequestParam int quantity, Map<String, Object> model){
         Part p = new Part(type, Boolean.valueOf(checkbox), quantity);
         repo.save(p);
-        //перенаправляет на главную страницу, которая отображает весь список
         return "redirect:/";
     }
 
@@ -60,6 +60,31 @@ public class PartController {
 
         return "main";
     }
+
+    @PostMapping("delete")
+    public String delete(@RequestParam String name){
+        repo.deleteById(Integer.valueOf(name));
+        return "redirect:/";
+    }
+
+    @PostMapping("edit")
+    public String edit(@RequestParam String name, Map<String,Object> model){
+        Part p = repo.findById(Integer.valueOf(name)).orElseThrow(() -> new RuntimeException("Can't find part with id = " + name));
+        model.put("part", p);
+        return "edit";
+    }
+
+    @PostMapping("update")
+    public String update(@RequestParam Integer id,
+                         @RequestParam(required = false) String type,
+                         @RequestParam(required = false, defaultValue = "false") String checkbox,
+                         @RequestParam (required = false) int quantity){
+        Part p = new Part(id, type, Boolean.valueOf(checkbox), quantity);
+        repo.save(p);
+        return "redirect:/";
+
+    }
+
 
     public void calculateQuantityOfDevices(Map<String,Object> model){
         Integer quantity = repo.findMinQuantityInNecessaryDetails();

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Parts</title>
+    <title>Edit part</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style type="text/css">
         .tg {
@@ -12,16 +12,13 @@
             border-color: #ccc;
 
         }
-        tr:nth-child(Odd) {
-            background: #e6f3e3; /* Цвет фона */
-        }
 
         .tg td {
             font-family: Arial, sans-serif;
             font-size: 14px;
             /* Устанавливает значение полей вокруг содержимого элемента. см. подробности использования, хитро в
             зависимости от количества переданных параметров*/
-            padding: 10px 5px;
+            padding: 3px 2px;
             /* Устанавливает стиль границы вокруг элемента.
             [none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset]*/
             border-style: solid;
@@ -41,9 +38,8 @@
         .tg th {
             font-family: Arial, sans-serif;
             font-size: 14px;
-            /* Устанавливает насыщенность шрифта bold|bolder|lighter|normal|100|200|300|400|500|600|700|800|900 */
             font-weight: bold;
-            padding: 10px 5px;
+            padding: 3px 2px;
             border-style: solid;
             border-width: 1px;
             overflow: hidden;
@@ -52,78 +48,46 @@
             color: #333;
             background-color: #c0d6e4;
         }
-        .add{
-            padding: 5px;
-            margin: 5px 0px 5px 0px;
-        }
-        .text-input1{
-            width: 280px;
-        }
-        .cont3{
-            margin: 5px 0px 5px 0px;
-
-        }
 
 
     </style>
+
 </head>
 
 <body>
-<!-- Добавляем деталь-->
-<form method="post" action="add">
-
-        <input type="text" required="true" name="type" placeholder="Наименование"/>
-        <input type="checkbox" name="checkbox" value="true"> Обязательно при сборке
-        <input type="number" min="1" required="true" name="quantity" placeholder="Количество"/>
-        <button class="add" type="submit">Добавить новую деталь</button>
-
-</form>
-<!-- поиск по наименованию-->
-<div>
-    <form method="post" action="find">
-
-        <input class="text-input1" type="text" name="type" placeholder="Поиск детали по наименованию">
-        <button type="submit">Найти</button>
-    </form>
-
-</div>
-<!-- фильтрация по необходимости деталей-->
-<div class="cont3">
-    <form method="post" action="filter">
-        <p><b>Отобразить на странице:</b></p>
-        <input required ="true" type="radio" name="filter" value="all">Все детали
-        <input required ="true" type="radio" name="filter" value="necessary">Только необходимые
-        <input required ="true" type="radio" name="filter" value="unnecessary">Только опциональные
-
-        <button type="submit">Отфильтровать</button>
-    </form>
-
-</div>
-
 <div>
     <table class="tg" >
+        <tr width="420"><b>ТЕКУЩЕЕ ЗНАЧЕНИЕ</b></tr>
         <tr>
-            <th width="30">ID</th>
             <th width="250">Тип детали</th>
             <th width="120">Необходимость</th>
             <th width="50">Количество</th>
-            <th colspan="2">Операции</th>
         </tr>
-        {{#parts}}
         <tr>
-            <td >{{id}}</td>
-            <td>{{type}}</td>
-            <!-- transform boolean to String-param in mustache-->
-            <td>{{#isNecessary}}да{{/isNecessary}}{{^isNecessary}}нет{{/isNecessary}}</td>
-            <td>{{quantity}}</td>
-            <!-- изменить запись-->
-            <td><form method="post" action="edit"><button type="submit" name="name" value="{{id}}">Изменить</button></form></td>
-            <!-- удалить запись-->
-            <td><form method="post" action="delete"><button type="submit" name="name" value="{{id}}">Удалить</button></form></td>
+
+            <td>{{part.type}}</td>
+            <td>{{#part.isNecessary}}да{{/part.isNecessary}}{{^part.isNecessary}}нет{{/part.isNecessary}}</td>
+            <td>{{part.quantity}}</td>
+
         </tr>
-        {{/parts}}
     </table>
 </div>
-<div><b>Всего можно собрать: {{total}} единиц</b></div>
+<div><b>ВВЕДИТЕ НОВЫЕ ЗНАЧЕНИЯ</b></div>
+<div>
+    <form method="post" action="update">
+
+        <input hidden name="id" value="{{part.id}}">
+        <input type="text" required="true" name="type" value="{{part.type}}" placeholder="Наименование"/>
+        <input type="checkbox" name="checkbox" value="true"> Обязательно при сборке
+        <input type="number" min="1" required="true" name="quantity" value="{{part.quantity}}" placeholder="Количество"/>
+        <button type="submit" name="button" value="update">Изменить</button>
+
+    </form>
+
+    <form method="get" action="/">
+        <button type="submit" name="button" value="cancel">Отмена</button>
+    </form>
+</div>
+
 </body>
 </html>

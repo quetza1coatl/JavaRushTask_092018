@@ -25,6 +25,13 @@ public class Part {
         this.quantity = quantity;
 
     }
+    public Part(Integer id, String type, boolean isNecessary, int quantity) {
+        this.id = id;
+        this.type = type;
+        this.isNecessary = isNecessary;
+        this.quantity = quantity;
+
+    }
 
     public Integer getId() {
         return id;
