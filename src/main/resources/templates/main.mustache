@@ -63,14 +63,22 @@
             margin: 5px 0px 5px 0px;
 
         }
+        .no_parts_available{
+            margin: 5px 0px 5px 0px;
+            color:red;
+        }
 
 
     </style>
 </head>
 
 <body>
+<form method="get" action="/refresh">
+      <button class="add" type="submit">REFRESH</button>
+
+</form>
 <!-- Добавляем деталь-->
-<form method="post" action="add">
+<form method="post" action="/">
 
         <input type="text" required="true" name="type" placeholder="Наименование"/>
         <input type="checkbox" name="checkbox" value="true"> Обязательно при сборке
@@ -80,7 +88,7 @@
 </form>
 <!-- поиск по наименованию-->
 <div>
-    <form method="post" action="find">
+    <form method="get" action="/">
 
         <input class="text-input1" type="text" name="type" placeholder="Поиск детали по наименованию">
         <button type="submit">Найти</button>
@@ -89,7 +97,7 @@
 </div>
 <!-- фильтрация по необходимости деталей-->
 <div class="cont3">
-    <form method="post" action="filter">
+    <form method="get" action="/filter">
         <p><b>Отобразить на странице:</b></p>
         <input required ="true" type="radio" name="filter" value="all">Все детали
         <input required ="true" type="radio" name="filter" value="necessary">Только необходимые
@@ -122,8 +130,20 @@
             <td><form method="post" action="delete"><button type="submit" name="name" value="{{id}}">Удалить</button></form></td>
         </tr>
         {{/parts}}
+
     </table>
 </div>
+<div class="no_parts_available">{{^parts}}
+    <b>Нет доступных частей</b>
+    {{/parts}}</div>
 <div><b>Всего можно собрать: {{total}} единиц</b></div>
+<div>
+    Перейти на страницу:
+    {{#array}}
+    <a href="{{url}}page={{key}}">{{value}}</a>
+    {{/array}}
+</div>
+
+
 </body>
 </html>

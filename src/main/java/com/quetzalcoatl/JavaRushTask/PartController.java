@@ -1,60 +1,84 @@
 package com.quetzalcoatl.JavaRushTask;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
 public class PartController {
     @Autowired
     private PartRepository repo;
+    @GetMapping("/refresh")
+    public String refresh(){
 
-    @GetMapping
-    public String main(Map<String, Object> model) {
-        Iterable<Part> parts = repo.findAll();
-        model.put("parts", parts);
-        calculateQuantityOfDevices (model);
-        return "main";
+        return "redirect:/";
     }
 
-    @PostMapping
-    public String find(@RequestParam String type, Map<String, Object> model){
-        Iterable<Part> parts;
+    @GetMapping("/")
+    public String main(@RequestParam(required = false, defaultValue = "") String type, Model model,
+                       @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<Part> pages;
         if((type == null) || (type.isEmpty()))
-            parts = repo.findAll();
+            pages = repo.findAll(pageable);
 
         else
-            parts = repo.findByTypeIgnoreCaseLike("%"+type+"%");
-        model.put("parts", parts);
-        calculateQuantityOfDevices (model);
+            pages = repo.findByTypeIgnoreCaseLike("%"+type+"%", pageable);
 
+        model.addAttribute("parts", pages.getContent());
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i=0; i<pages.getTotalPages();i++)
+            map.put(i, i+1);
+        Set<Map.Entry<Integer, Integer>> entrySet = map.entrySet();
+        if((type == null) || (type.isEmpty()))
+            model.addAttribute("url", "/?");
+        else
+            model.addAttribute("url", "/?type=" + type + "&");
+        model.addAttribute("array", entrySet);
+        calculateQuantityOfDevices (model);
         return "main";
     }
-    @PostMapping("add")
-    public String add(@RequestParam String type, @RequestParam(required = false, defaultValue = "false") String checkbox, @RequestParam int quantity, Map<String, Object> model){
+
+
+    @PostMapping("/")
+    public String add(@RequestParam String type,
+                      @RequestParam(required = false, defaultValue = "false") String checkbox,
+                      @RequestParam int quantity){
         Part p = new Part(type, Boolean.valueOf(checkbox), quantity);
         repo.save(p);
         return "redirect:/";
     }
 
-    @PostMapping("filter")
-    public String filter(@RequestParam String filter, Map<String,Object> model){
-        Iterable<Part> parts;
+    @GetMapping("/filter")
+    public String filter(@RequestParam String filter, Model model,
+                         @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable){
+        Page<Part> pages;
         switch (filter){
             case "necessary":
-                parts = repo.findByIsNecessary(true);
+                pages = repo.findByIsNecessary(true, pageable);
                 break;
             case "unnecessary":
-                parts = repo.findByIsNecessary(false);
+                pages = repo.findByIsNecessary(false, pageable);
                 break;
              default:
-                 parts = repo.findAll();
+                 pages = repo.findAll(pageable);
         }
-        model.put("parts", parts);
+         model.addAttribute("parts", pages.getContent());
+
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i=0; i<pages.getTotalPages();i++)
+            map.put(i, i+1);
+        Set<Map.Entry<Integer, Integer>> entrySet = map.entrySet();
+        model.addAttribute("url", "/filter?filter=" + filter + "&");
+        model.addAttribute("array", entrySet);
         calculateQuantityOfDevices (model);
 
 
@@ -86,10 +110,10 @@ public class PartController {
     }
 
 
-    public void calculateQuantityOfDevices(Map<String,Object> model){
-        Integer quantity = repo.findMinQuantityInNecessaryDetails();
+    public void calculateQuantityOfDevices(Model model){
+        Integer quantity = repo.findMinQuantityOfNecessaryDetails();
 
-        model.put("total", quantity);
+        model.addAttribute("total", quantity);
 
     }
 
