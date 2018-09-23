@@ -1,0 +1,48 @@
+		.tg {
+            border-collapse: collapse;
+            border-color: #ccc;
+
+        }
+        tr:nth-child(Odd) {
+            background: #B0E0E6;
+        }
+
+        .tg td {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+            color: #000000;
+
+
+        }
+        .tg th {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+            color: #000000;
+            background-color: #FF6347;
+        }
+        .add_btn{
+            padding: 5px;
+            margin: 5px 0px 5px 0px;
+        }
+        .text-input1{
+            width: 280px;
+        }
+        .div1{
+            margin: 5px 0px 5px 0px;
+
+        }
+        .div2{
+            margin: 5px 0px 5px 0px;
+            color:red;
+        }

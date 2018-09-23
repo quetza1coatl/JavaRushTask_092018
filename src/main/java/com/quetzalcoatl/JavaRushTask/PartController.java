@@ -17,7 +17,7 @@ import java.util.*;
 public class PartController {
     @Autowired
     private PartRepository repo;
-    @GetMapping("/refresh")
+    @GetMapping("/home")
     public String refresh(){
 
         return "redirect:/";
@@ -38,11 +38,15 @@ public class PartController {
         for(int i=0; i<pages.getTotalPages();i++)
             map.put(i, i+1);
         Set<Map.Entry<Integer, Integer>> entrySet = map.entrySet();
+
         if((type == null) || (type.isEmpty()))
             model.addAttribute("url", "/?");
         else
             model.addAttribute("url", "/?type=" + type + "&");
+
         model.addAttribute("array", entrySet);
+        model.addAttribute("value", "all");
+        model.addAttribute("type", type);
         calculateQuantityOfDevices (model);
         return "main";
     }
@@ -61,17 +65,22 @@ public class PartController {
     public String filter(@RequestParam String filter, Model model,
                          @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable){
         Page<Part> pages;
+        String value;
         switch (filter){
             case "necessary":
                 pages = repo.findByIsNecessary(true, pageable);
+                value = "necessary";
                 break;
             case "unnecessary":
                 pages = repo.findByIsNecessary(false, pageable);
+                value = "unnecessary";
                 break;
              default:
                  pages = repo.findAll(pageable);
+                 value = "all";
         }
          model.addAttribute("parts", pages.getContent());
+         model.addAttribute("value", value);
 
         Map<Integer,Integer> map = new HashMap<>();
         for(int i=0; i<pages.getTotalPages();i++)
@@ -79,6 +88,7 @@ public class PartController {
         Set<Map.Entry<Integer, Integer>> entrySet = map.entrySet();
         model.addAttribute("url", "/filter?filter=" + filter + "&");
         model.addAttribute("array", entrySet);
+        model.addAttribute("type", "");
         calculateQuantityOfDevices (model);
 
 
@@ -93,7 +103,7 @@ public class PartController {
 
     @PostMapping("edit")
     public String edit(@RequestParam String name, Map<String,Object> model){
-        Part p = repo.findById(Integer.valueOf(name)).orElseThrow(() -> new RuntimeException("Can't find part with id = " + name));
+        Part p = repo.findById(Integer.valueOf(name)).orElseThrow(() -> new NullPointerException("Can't find part with id = " + name));
         model.put("part", p);
         return "edit";
     }
@@ -110,10 +120,22 @@ public class PartController {
     }
 
 
-    public void calculateQuantityOfDevices(Model model){
-        Integer quantity = repo.findMinQuantityOfNecessaryDetails();
+    private void calculateQuantityOfDevices(Model model){
+        int quantity = repo.findMinQuantityOfNecessaryDetails();
+        int lastTwo = quantity%100;
+        int last = quantity%10;
+        String ending = "";
+        if((lastTwo) > 10 && (lastTwo < 15))
+            ending = "ов";
+        else {
+            if((last == 0) || ((last > 4)&& (last < 10)))
+                ending = "ов";
+            if((last > 1)&& (last < 5))
+                ending = "а";
+        }
 
         model.addAttribute("total", quantity);
+        model.addAttribute("ending", ending);
 
     }
 
