@@ -1,4 +1,4 @@
-package com.quetzalcoatl.JavaRushTask;
+package com.quetzalcoatl.javarushtesttask;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

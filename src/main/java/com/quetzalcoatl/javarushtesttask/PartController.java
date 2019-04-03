@@ -1,4 +1,4 @@
-package com.quetzalcoatl.JavaRushTask;
+package com.quetzalcoatl.javarushtesttask;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -128,7 +128,7 @@ public class PartController {
         if((lastTwo) > 10 && (lastTwo < 15))
             ending = "ов";
         else {
-            if((last == 0) || ((last > 4)&& (last < 10)))
+            if((last == 0) || (last > 4))
                 ending = "ов";
             if((last > 1)&& (last < 5))
                 ending = "а";
